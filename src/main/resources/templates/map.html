@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenStreetMap Test</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <style>
         #map { height: 80vh; width: 100%; }
         html, body { height: 100%; margin: 0; padding: 0; }
     </style>
 </head>
 <body>
+    <div th:replace="~{fragments :: navbar}"></div>
     <div id="filterForm" style="font-family: sans-serif; margin-bottom: 15px;">
     <h4>Filter Map:</h4>
     <!-- Cafe toggle (applies to vancouver-cafes.geojson) -->
