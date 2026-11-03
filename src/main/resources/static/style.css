@@ -63,3 +63,20 @@ footer {
   padding: 16px;
   color: #777;
 }
+
+.logout-btn { 
+  font-family: inherit;
+  background: none;
+  border: none; 
+  color: white; 
+  cursor: pointer; 
+  font-size: 16px; 
+}
+
+.logout-btn:hover { 
+  text-decoration: underline; 
+}
+.nav-right { 
+  display: flex; 
+  align-items: center; 
+  gap: 20px; }
