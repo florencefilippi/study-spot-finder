@@ -41,3 +41,41 @@ async function loadAllData() {
     } catch (error) {  
         console.error("Error loading GeoJSON files:", error);
     }
+}
+function addGeoJSONToLayer(geojsonData, filterFunction = null) {
+    L.geoJSON(geojsonData, {
+        pointToLayer: function (feature, latlng) {
+            return L.marker(latlng);
+        },
+        filter: filterFunction,
+        onEachFeature: onEachFeature
+    }).addTo(markersLayer);
+}
+
+function onEachFeature(feature, layer) {
+    const props = feature.properties || {};
+    const name = props.name || 'Unnamed Location';
+
+    let lat, lon;
+    if (feature.geometry.type === 'Point') {
+        lon = feature.geometry.coordinates[0];
+        lat = feature.geometry.coordinates[1];
+    } else {
+        const center = layer.getBounds().getCenter();
+        lat = center.lat;
+        lon = center.lng;
+    }
+
+    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}+(${lat},${lon})`;
+
+    layer.bindPopup(`
+        <div style="font-family: sans-serif;">
+            <h3 style="margin: 0 0 5px 0; font-size: 16px;">${name}</h3>
+            ${props.type ? `<p style="margin: 0 0 3px 0; font-size: 12px;"><b>Type:</b> ${props.type}</p>` : ''}
+            ${props.opening_hours ? `<p style="margin: 0 0 5px 0; font-size: 12px;"><b>Hours:</b> ${props.opening_hours}</p>` : ''}
+            <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" style="color: #0078A8;">
+                Open in Google Maps ↗
+            </a>
+        </div>
+    `);
+}
