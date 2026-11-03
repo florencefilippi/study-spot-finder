@@ -79,3 +79,5 @@ function onEachFeature(feature, layer) {
         </div>
     `);
 }
+
+loadAllData();
