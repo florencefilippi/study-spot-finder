@@ -1,25 +1,27 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-</head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Login')}"></head>
 <body>
-    <h1>Login</h1>
+  <main class="narrow">
+    <div class="card">
+      <h1>Login</h1>
 
-    <p th:if="${param.error}">Your username or password is incorrect. Please try again.</p>
-    <p th:if="${param.logout}">You have been logged out.</p>
+      <!-- Same messages as before, now colored -->
+      <p class="error" th:if="${param.error}">Your username or password is incorrect. Please try again.</p>
+      <p class="success" th:if="${param.logout}">You have been logged out.</p>
 
-    <form th:action="@{/login}" method="post">
+      <form class="stack" th:action="@{/login}" method="post">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
 
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
 
-        <button type="submit">Login</button>
-    </form>
-    <a th:href="@{/signup}">Create an Account</a>
+        <button class="btn" type="submit">Login</button>
+      </form>
+
+      <p><a th:href="@{/signup}">Create an Account</a></p>
+    </div>
+  </main>
 </body>
 </html>

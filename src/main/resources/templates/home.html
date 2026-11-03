@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <head>
-        <meta charset="UTF-8">
-        <title>Home</title>
-        <link rel="stylesheet" th:href="@{/css/style.css}">
-    </head>
-    <body>
-        <h1>Home</h1>
-        <p>Welcome, <span sec:authentication="name"></span>!</p>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments :: head('Home')}"></head>
+<body>
+  <div th:replace="~{fragments :: navbar}"></div>
 
-        <form th:action="@{/logout}" method="post">
-            <button type="submit">Logout</button>
-        </form>
-    </body>
+  <main>
+    <div class="card">
+      <h1>Home</h1>
+      <p>Welcome, <span sec:authentication="name"></span>!</p>
+      <a class="btn" th:href="@{/map}">Open the map</a>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments :: footer}"></div>
+</body>
 </html>
