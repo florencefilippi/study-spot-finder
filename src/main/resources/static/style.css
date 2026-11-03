@@ -1,0 +1,65 @@
+/* Whole page: font, background color, no default margin */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f5f7;
+  color: #222;
+}
+
+/* The top menu bar (SFU red) */
+.navbar {
+  display: flex;                  /* puts the logo and links in one row */
+  justify-content: space-between; /* logo on the left, links on the right */
+  align-items: center;
+  background: #a6192e;
+  padding: 12px 24px;
+}
+.navbar .brand {
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-decoration: none;
+}
+.navbar ul {
+  list-style: none;               /* removes the bullet points */
+  display: flex;
+  gap: 20px;                      /* space between links */
+  margin: 0;
+  padding: 0;
+}
+.navbar a { color: white; text-decoration: none; }
+.navbar a:hover { text-decoration: underline; }
+
+/* Main content area: centered column */
+main {
+  max-width: 900px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+/* White box to hold each section */
+.card {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  margin-bottom: 16px;
+}
+
+/* Red button link */
+.btn {
+  display: inline-block;
+  background: #a6192e;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+.btn:hover { background: #7d1323; }
+
+/* footer */
+footer {
+  text-align: center;
+  padding: 16px;
+  color: #777;
+}
