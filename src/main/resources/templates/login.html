@@ -9,6 +9,7 @@
       <!-- Same messages as before, now colored -->
       <p class="error" th:if="${param.error}">Your username or password is incorrect. Please try again.</p>
       <p class="success" th:if="${param.logout}">You have been logged out.</p>
+      <p class="success" th:if="${param.registered}">Account created! Please log in.</p>
 
       <form class="stack" th:action="@{/login}" method="post">
         <label for="username">Username:</label>
