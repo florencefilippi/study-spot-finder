@@ -81,3 +81,51 @@ function onEachFeature(feature, layer) {
 }
 
 loadAllData();
+
+
+//filter function and load edits
+function filterAndRenderMarkers() {
+    // Clear current markers from the map layer group
+    markersLayer.clearLayers();
+
+    // 1. Check if the Cafe toggle is checked
+    const cafesToggle = document.getElementById('cafeToggle');
+    if (cafesToggle && cafesToggle.checked && cafeGeojsonData) {
+        addGeoJSONToLayer(cafeGeojsonData);
+    }
+
+    const sfuToggle = document.getElementById('SFUToggle');
+    if (sfuToggle && sfuToggle.checked && sfuGeojsonData) {
+        // Gather checked sub-categories
+        const sfuCheckboxes = document.querySelectorAll('#filterForm input[name="category"]:checked');
+        const checkedTypes = Array.from(sfuCheckboxes).map(cb => cb.value.toLowerCase());
+
+        // Only render if at least one sub-category is checked
+        if (checkedTypes.length > 0) {
+            addGeoJSONToLayer(sfuGeojsonData, function(feature) {
+                const props = feature.properties || {};
+                const featureType = (props.type || '').toLowerCase();
+                
+                // Return true if the feature matches ANY of the checked SFU categories
+                return checkedTypes.some(type => featureType.includes(type));
+            });
+        }
+    }
+    
+}
+
+//event checks to see if the map needs update
+const cafeToggle = document.getElementById('cafeToggle');
+if (cafeToggle) {
+    cafeToggle.addEventListener('change', filterAndRenderMarkers);
+}
+
+const sfuToggle = document.getElementById('SFUToggle');
+if (sfuToggle) {
+    sfuToggle.addEventListener('change', filterAndRenderMarkers);
+}
+
+// Listen for changes on all SFU category checkboxes
+document.querySelectorAll('#filterForm input[name="category"]').forEach(cb => {
+    cb.addEventListener('change', filterAndRenderMarkers);
+});
