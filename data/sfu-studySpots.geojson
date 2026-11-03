@@ -1,0 +1,156 @@
+{
+"type": "FeatureCollection",
+"features": [
+{
+"type": "Feature",
+"properties": {
+"name": "Robert C. Brown Theatre",
+"type": "Indoor Seating / Social Lounge",
+"description": "Large lecture hall and performance venue located on the upper campus level."
+},
+"geometry": {
+"type": "Point",
+"coordinates": [
+-122.9168748,
+49.2798315
+]
+}
+},
+{
+"type": "Feature",
+"properties": {
+"name": "Academic Quadrangle (AQ North)",
+"type": "Academic & Study Space",
+"description": "Northern wing of the AQ, featuring classroom hallways, quiet study nooks, and seating."
+},
+"geometry": {
+"type": "Point",
+"coordinates": [
+-122.9157337,
+49.2797583
+]
+}
+},
+{
+"type": "Feature",
+"properties": {
+"name": "Academic Quadrangle (AQ Northeast)",
+"type": "Indoor Seating",
+"description": "Northeast corner of the AQ near student services, departmental offices, and bench seating."
+},
+"geometry": {
+"type": "Point",
+"coordinates": [
+-122.9150665,
+49.2794085
+]
+}
+},
+{
+"type": "Feature",
+"properties": {
+"name": "Mackenzie Cafe / AQ Concourse",
+"type": "Dining & Social Lounge",
+"description": "Bustling central cafe area in the AQ concourse with extensive dining seating and group tables."
+},
+"geometry": {
+"type": "Point",
+"coordinates": [
+-122.9156264,
+49.2788888
+]
+}
+},
+{
+"type": "Feature",
+"properties": {
+"name": "Applied Sciences Building (ASB) Atrium",
+"type": "Technical Seating",
+"description": "Popular open seating area frequently used by CS and engineering students with power outlets."
+},
+"geometry": {
+"type": "Point",
+"coordinates": [
+-122.9142626,
+49.2774353
+]
+}
+},
+{
+"type": "Feature",
+"properties": {
+"name": "Shrum Science Centre / Kinesiology Building",
+"type": "Indoor Seating",
+"description": "Science complex hallway seating and quiet study areas close to lab facilities."
+},
+"geometry": {
+"type": "Point",
+"coordinates": [
+-122.9151749,
+49.277761
+]
+}
+},
+{
+"type": "Feature",
+"properties": {
+"name": "STUDENT UNION BUILDING (SUB)",
+"type": "Social Lounge",
+"description": "Multi-floor space with study space, social areas, and student services."
+},
+"geometry": {
+"type": "Point",
+"coordinates": [
+-122.9181476,
+49.2785591
+]
+}
+},
+{
+"type": "Feature",
+"properties": {
+"name": "MAGGIE BENSON CENTRE (MBC)",
+"type": "Cafeteria / Social Lounge",
+"description": "Multi-floor space with study space and social areas, including a cafe and student services."
+},
+"geometry": {
+"type": "Point",
+"coordinates": [
+-122.9192076,
+49.2787591
+]
+}
+},
+{
+"type": "Feature",
+"geometry": {
+"type": "Point",
+"coordinates": [-122.9127499, 49.2794251]
+},
+"properties": {
+"name": "Blusson Hall Atrium",
+"type": "Indoor Seating",
+"description": "Modern architecture, quiet study tables, and power outlets."
+}
+},
+{
+"type": "Feature",
+"properties": {
+"name": "W.A.C. Bennett Library (North)",
+"type": "Library / Group Study",
+"description": "Main library entrance area with group study rooms, computers, and casual seating."
+},
+"geometry": {
+"type": "Point",
+"coordinates": [
+-122.9188233,
+49.2796493
+]
+}
+}
+]
+}
+
+
+
+
