@@ -1,1 +1,44 @@
-1
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenStreetMap Test</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        #map { height: 80vh; width: 100%; }
+        html, body { height: 100%; margin: 0; padding: 0; }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments :: navbar}"></div>
+    <div id="filterForm" style="font-family: sans-serif; margin-bottom: 15px;">
+    <h4>Filter Map:</h4>
+    <!-- Cafe toggle (applies to vancouver-cafes.geojson) -->
+    <label><input type="checkbox" id="cafeToggle" value = "Cafes" checked>Cafes</label><br>
+    <label><input type="checkbox" id = "SFUToggle" value = "Study Spaces at SFU" checked>SFU</label>
+
+    <hr>
+    <h4>SFU Study Spaces</h4>
+    <label>
+        <input type="checkbox" name="category" value="Library" checked> Libraries
+    </label><br>
+    <label>
+        <input type="checkbox" name="category" value="Academic & Study Space" checked> Academic Spaces
+    </label><br>
+    <label>
+        <input type="checkbox" name="category" value="Indoor Seating" checked> Indoor Seating
+    </label><br>
+    <label>
+        <input type="checkbox" name="category" value="Technical Seating" checked> Technical Seating
+    </label><br>
+    <label>
+        <input type="checkbox" name="category" value="Social Lounge" checked> Social Lounges
+    </label>
+    </div>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="map.js"></script>
+</body>
+</html>
