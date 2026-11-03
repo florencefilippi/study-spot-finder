@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- th:replace swaps this tag with the head fragment, passing 'Home' as the title -->
+<head th:replace="~{fragments :: head('Home')}"></head>
+<body>
+  <!-- Shared menu bar -->
+  <div th:replace="~{fragments :: navbar}"></div>
+
+  <main>
+    <div class="card">
+      <h1>Find your next study spot</h1>
+      <p>Browse cafes and study spaces around SFU and Vancouver.</p>
+      <a class="btn" th:href="@{/map}">Open the map</a>
+    </div>
+  </main>
+
+  <!-- Shared footer -->
+  <div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>
