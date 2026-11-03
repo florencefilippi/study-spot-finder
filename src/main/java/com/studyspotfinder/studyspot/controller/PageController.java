@@ -11,7 +11,7 @@ public class PageController {
     //returned text is the file name without ".html"
     @GetMapping("/")
     public String home() {
-        return "home";
+        return "landing";
     }
 
     // When someone visits "/map", show templates/map.html
