@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<!--goes inside every page's <head>. It takes the page title as input. -->
+<head th:fragment="head(title)">
+  <meta charset="UTF-8">
+  <!-- Makes the page scale properly on phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${title}">Study Spot Finder</title>
+  <!-- Loads our CSS file from src/main/resources/static/style.css -->
+  <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+  <!-- the menu bar at the top of page -->
+  <header th:fragment="navbar">
+    <nav class="navbar">
+      <a class="brand" th:href="@{/}">Study Spot Finder</a>
+      <ul>
+        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/map}">Map</a></li>
+        <li><a th:href="@{/profile}">Profile</a></li>
+      </ul>
+
+    <!-- Logout button -->
+      <form th:action="@{/logout}" method="post" style="margin:0">
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+    </nav>
+  </header>
+
+  <!--footer at the bottom of page -->
+  <footer th:fragment="footer">
+    <p>Study Spot Finder - CMPT 276</p>
+  </footer>
+</body>
+</html>
