@@ -9,6 +9,13 @@
       <h1>Admin Dashboard</h1>
       <p>Welcome, <span sec:authentication="name"></span>!</p>
     </div>
+      <main>
+    <div class="card">
+      <h1>Admin Dashboard</h1>
+      <p>Welcome, <span sec:authentication="name"></span>!</p>
+      <a class="btn" th:href="@{/admin/users}">Manage Users</a>
+    </div>
+  </main>
   </main>
 
   <div th:replace="~{fragments :: footer}"></div>
