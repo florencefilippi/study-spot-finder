@@ -30,6 +30,7 @@ public class SignupController {
     public String signup(@RequestParam String username,
                          @RequestParam String password,
                          @RequestParam String confirmPassword,
+                         @RequestParam String role,
                          Model model) {
 
         username = username.trim();
@@ -46,9 +47,15 @@ public class SignupController {
         if (userRepository.existsByUsername(username)) {
             return error(model, username, "Username already exists.");
         }
+        // Validates the role selection
+        if(!role.equals("USER") && !role.equals("CONTRIBUTOR")){
+            return error(model, username, "Invalid Role");
+        }
 
-        // always hash the password; new accounts are always regular users
-        userRepository.save(new User(username, passwordEncoder.encode(password), Role.USER));
+        Role roleType = Role.valueOf(role);
+        
+
+        userRepository.save(new User(username, passwordEncoder.encode(password), roleType));
 
         return "redirect:/login?registered";
     }

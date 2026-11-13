@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns::sec="http://www.thymeleaf.org/extras/spring-security">
 
 <!--goes inside every page's <head>. It takes the page title as input. -->
 <head th:fragment="head(title)">
@@ -20,10 +20,12 @@
         <li><a th:href="@{/}">Home</a></li>
         <li><a th:href="@{/map}">Map</a></li>
         <li><a th:href="@{/profile}">Profile</a></li>
+        <li sec:authorize="hasRole('CONTRIBUTOR')"><a th:href="@{/contributor}">Contributor</a></li>
+        <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/admin}">Admin</a></li>
       </ul>
 
     <!-- Logout button -->
-      <form th:action="@{/logout}" method="post" style="margin:0">
+      <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" style="margin:0">
         <button type="submit" class="logout-btn">Logout</button>
       </form>
     </nav>
