@@ -15,9 +15,9 @@
   <!-- the menu bar at the top of page -->
   <header th:fragment="navbar">
     <nav class="navbar">
-      <a class="brand" th:href="@{/}">Study Spot Finder</a>
+      <a class="brand" th:href="@{/home}">Study Spot Finder</a>
       <ul>
-        <li><a th:href="@{/}">Home</a></li>
+        <li><a th:href="@{/home}">Home</a></li>
         <li><a th:href="@{/map}">Map</a></li>
         <li><a th:href="@{/profile}">Profile</a></li>
         <li sec:authorize="hasRole('CONTRIBUTOR')"><a th:href="@{/contributor}">Contributor</a></li>
