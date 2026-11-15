@@ -19,10 +19,4 @@ public class PageController {
     public String map() {
         return "map";
     }
-
-    // When someone visits "/profile", show templates/profile.html
-    @GetMapping("/profile")
-    public String profile() {
-        return "profile";
-    }
 }

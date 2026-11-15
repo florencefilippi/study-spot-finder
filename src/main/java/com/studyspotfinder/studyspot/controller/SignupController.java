@@ -90,7 +90,7 @@ public class SignupController {
 
         // Automatically log in the user after a successful sign-up
         loginAutomatically(username, request, response);
-        return "redirect:/home";
+        return "redirect:/profile";
     }
 
     private String error(Model model, String username, String message) {
