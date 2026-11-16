@@ -95,9 +95,27 @@ form.stack input {
   border-radius: 4px;
 }
 
-/* Makes <button class="btn"> match the red link buttons */
+/* Makes button match the red link buttons */
 button.btn { border: none; cursor: pointer; font-size: 16px; margin-top: 16px; }
 
 /* Messages */
 .error { color: #a6192e; }
 .success { color: #2e7d32; }
+
+/* Select boxes and text areas look like the text inputs */
+form.stack select,
+form.stack textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Simple table for lists */
+table.data { width: 100%; border-collapse: collapse; margin-top: 16px; }
+table.data th, table.data td { text-align: left; padding: 8px; border-bottom: 1px solid #e0e0e0; }
+table.data th { background: #f0f0f2; }
