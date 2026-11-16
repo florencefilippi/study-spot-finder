@@ -48,11 +48,15 @@ public class ProfileController {
         return "profile";
     }
 
-    @PostMapping("/profile")
-    public String postProfile(Authentication authentication, Model model, @RequestParam String name, @RequestParam String school, @RequestParam String major) {
-        // Get the logged-in user
+       @PostMapping("/profile")
+    public String postProfile(Authentication authentication, Model model,
+                              @RequestParam String name,
+                              @RequestParam(required = false) String school,
+                              @RequestParam(required = false) String major,
+                              @RequestParam(required = false) String company,
+                              @RequestParam(required = false) String locationName) {
         User loggedinUser = currentUser(authentication);
-        
+
         Optional<Profile> existing = profileRepository.findByUser(loggedinUser);
 
         boolean firstTime = !existing.isPresent();
@@ -60,8 +64,10 @@ public class ProfileController {
         Profile profile = existing.orElseGet(() -> new Profile(loggedinUser));
 
         profile.setName(name);
-        profile.setSchool(school);
-        profile.setMajor(major);
+        if (school != null) profile.setSchool(school);
+        if (major != null) profile.setMajor(major);
+        if (company != null) profile.setCompany(company);
+        if (locationName != null) profile.setLocationName(locationName);
         profileRepository.save(profile);
 
         if(firstTime){
