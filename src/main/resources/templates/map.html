@@ -6,10 +6,12 @@
     <title>Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-search@3.0.9/dist/leaflet-search.min.css" />
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/mapStyle.css}">
 </head>
 <body>
-    
+    <div th:replace="~{fragments :: navbar}"></div>
+
     <div id="filterForm">
     <h4>Filter Map:</h4>
     <!-- Cafe toggle (applies to vancouver-cafes.geojson) -->
@@ -38,4 +40,5 @@
     <script src="https://unpkg.com/leaflet-search@3.0.9/dist/leaflet-search.min.js"></script>
     <script src="map.js"></script>
 </body>
+
 </html>
