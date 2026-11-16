@@ -1,17 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Profile')}"></head>
-<body>
-  <div th:replace="~{fragments :: navbar}"></div>
+  <head th:replace="~{fragments :: head('Profile')}"></head>
+  <body>
+    <div th:replace="~{fragments :: navbar}"></div>
 
-  <main>
-    <div class="card">
-      <h1>Profile</h1>
-      <!-- USER LOGIN INFO -->
-      <p>Your profile will show up here.</p>
-    </div>
-  </main>
+    <main>
+      <div class="card">
+        <h1>Profile</h1>
+        <p class="success" th:if="${param.saved}">
+          Profile saved successfully!
+        </p>
+        <!--Edit Profile-->
+        <div th:if="${param.edit != null or firstTime}">
+          <form class="stack" th:action="@{/profile}" method="post">
+            <label for="name">Name:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              th:value="${profile.name}"
+              required
+            />
+            <label for="school">School:</label>
+            <input
+              type="text"
+              id="school"
+              name="school"
+              th:value="${profile.school}"
+            />
+            <label for="major">Major:</label>
+            <input
+              type="text"
+              id="major"
+              name="major"
+              th:value="${profile.major}"
+            />
 
-  <div th:replace="~{fragments :: footer}"></div>
-</body>
+            <button type="submit" class="btn">Save</button>
+          </form>
+        </div>
+
+        <!--View Profile-->
+        <div th:unless="${param.edit != null or firstTime}">
+          <p><strong>Name:</strong> <span th:text="${profile.name}"></span></p>
+          <p><strong>School:</strong> <span th:text="${profile.school}"></span></p>
+          <p><strong>Major:</strong> <span th:text="${profile.major}"></span></p>
+
+          <a th:href="@{/profile?edit=true}" class="btn">Edit Profile</a>
+        </div>
+      </div>
+    </main>
+
+    <div th:replace="~{fragments :: footer}"></div>
+  </body>
 </html>
