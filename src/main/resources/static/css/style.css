@@ -118,3 +118,12 @@ th {
   font-weight: bold;
 }
 tbody tr:hover { background: #fafafa; }
+
+.inline-form { display: flex; gap: 8px; align-items: center; margin: 0; }
+.inline-form select {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: inherit;
+}
+button.btn-small { padding: 6px 12px; font-size: 14px; margin-top: 0; }
