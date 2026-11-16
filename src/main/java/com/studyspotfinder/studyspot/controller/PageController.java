@@ -7,22 +7,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PageController {
 
-    // When someone visits "/", show templates/home.html
+    // When someone visits "/", sends them to the home page "/home"
     //returned text is the file name without ".html"
     @GetMapping("/")
     public String home() {
-        return "landing";
+        return "redirect:home";
     }
 
     // When someone visits "/map", show templates/map.html
     @GetMapping("/map")
     public String map() {
         return "map";
-    }
-
-    // When someone visits "/profile", show templates/profile.html
-    @GetMapping("/profile")
-    public String profile() {
-        return "profile";
     }
 }
