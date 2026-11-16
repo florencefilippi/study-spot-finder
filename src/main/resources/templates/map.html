@@ -3,22 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenStreetMap Test</title>
+    <title>Map</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <style>
-        #map { height: 80vh; width: 100%; }
-        html, body { height: 100%; margin: 0; padding: 0; }
-    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-search@3.0.9/dist/leaflet-search.min.css" />
+    <link rel="stylesheet" th:href="@{/css/mapStyle.css}">
 </head>
 <body>
-    <div th:replace="~{fragments :: navbar}"></div>
-    <div id="filterForm" style="font-family: sans-serif; margin-bottom: 15px;">
+    
+    <div id="filterForm">
     <h4>Filter Map:</h4>
     <!-- Cafe toggle (applies to vancouver-cafes.geojson) -->
     <label><input type="checkbox" id="cafeToggle" value = "Cafes" checked>Cafes</label><br>
     <label><input type="checkbox" id = "SFUToggle" value = "Study Spaces at SFU" checked>SFU</label>
-
     <hr>
     <h4>SFU Study Spaces</h4>
     <label>
@@ -39,6 +35,7 @@
     </div>
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-search@3.0.9/dist/leaflet-search.min.js"></script>
     <script src="map.js"></script>
 </body>
 </html>
