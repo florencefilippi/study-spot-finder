@@ -13,7 +13,7 @@
 
       <table class="data" th:unless="${#lists.isEmpty(spots)}">
         <thead>
-          <tr><th>Name</th><th>Type</th><th>Hours</th><th></th></tr>
+          <tr><th>Name</th><th>Type</th><th>Hours</th><th></th><th></th></tr>
         </thead>
         <tbody>
           <tr th:each="spot : ${spots}">
@@ -21,6 +21,12 @@
             <td th:text="${spot.type}">Type</td>
             <td th:text="${spot.openingHours}">Hours</td>
             <td><a th:href="@{/contributor/spots/{id}/edit(id=${spot.id})}">Edit</a></td>
+            <td>
+            <form th:action="@{/contributor/spots/{id}/delete(id=${spot.id})}" method="post"
+            onsubmit="return confirm('Delete this study spot? This cannot be undone.');">
+            <button type="submit" class="btn btn-small btn-danger">Delete</button>
+            </form>
+            </td>
           </tr>
         </tbody>
       </table>

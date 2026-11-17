@@ -87,7 +87,14 @@ public class ContributorSpotController {
         spots.save(spot);
         return "redirect:/contributor/spots";
     }
-
+    
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable Long id, Principal principal) {
+        Spot spot = ownedSpot(id, principal);
+        spots.delete(spot);
+        return "redirect:/contributor/spots";
+    }
+    
     private Spot ownedSpot(Long id, Principal principal) {
         Spot spot = spots.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

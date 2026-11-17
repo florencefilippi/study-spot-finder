@@ -129,7 +129,10 @@ function onEachFeature(feature, layer) {
 
     const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}+(${lat},${lon})`;
 
-    // exist on contributor spots, so they only show for those.
+    // url that goes to a location's details page (only for features with an id)
+    const detailsUrl = feature.id ? `/locations/details?id=${encodeURIComponent(feature.id)}` : '';
+
+    // description and owner only exist on contributor spots, so they only show for those.
     layer.bindPopup(`
         <div style="font-family: sans-serif;">
             <h3 style="margin: 0 0 5px 0; font-size: 16px;">${escapeHtml(name)}</h3>
@@ -140,6 +143,9 @@ function onEachFeature(feature, layer) {
             <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" style="color: #0078A8;">
                 Open in Google Maps ↗
             </a>
+            ${detailsUrl ? 
+                `<a href="${detailsUrl}" style="color: #0078A8; display: block;">View Details &amp; Reviews</a>` : ''
+            }
         </div>
     `);
 }
