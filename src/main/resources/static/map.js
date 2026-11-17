@@ -41,6 +41,7 @@ map.addControl(searchControl);
 //Global variables
 let cafeGeojsonData = null;
 let sfuGeojsonData = null;
+let spotGeojsonData = null; 
 
 
 async function loadAllData() {
@@ -65,6 +66,21 @@ async function loadAllData() {
         console.error("Error loading GeoJSON files:", error);
     }
 }
+
+// It is separate from loadAllData so a problem here cannot break the cafes and SFU spots.
+async function loadSpots() {
+    try {
+        const res = await fetch('/api/spots');
+        if (!res.ok) {
+            throw new Error("Failed to load contributor spots.");
+        }
+        spotGeojsonData = await res.json();
+        filterAndRenderMarkers();
+    } catch (error) {
+        console.error("Error loading contributor spots:", error);
+    }
+}
+
 function addGeoJSONToLayer(geojsonData, filterFunction = null) {
     L.geoJSON(geojsonData, {
         pointToLayer: function (feature, latlng) {
@@ -73,6 +89,17 @@ function addGeoJSONToLayer(geojsonData, filterFunction = null) {
         filter: filterFunction,
         onEachFeature: onEachFeature
     }).addTo(markersLayer);
+}
+
+// spot names and descriptions, so without this someone could put HTML or a script
+// in a name and it would run for everyone who opens the popup.
+function escapeHtml(text) {
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 
 function onEachFeature(feature, layer) {
@@ -91,11 +118,14 @@ function onEachFeature(feature, layer) {
 
     const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}+(${lat},${lon})`;
 
+    // exist on contributor spots, so they only show for those.
     layer.bindPopup(`
         <div style="font-family: sans-serif;">
-            <h3 style="margin: 0 0 5px 0; font-size: 16px;">${name}</h3>
-            ${props.type ? `<p style="margin: 0 0 3px 0; font-size: 12px;"><b>Type:</b> ${props.type}</p>` : ''}
-            ${props.opening_hours ? `<p style="margin: 0 0 5px 0; font-size: 12px;"><b>Hours:</b> ${props.opening_hours}</p>` : ''}
+            <h3 style="margin: 0 0 5px 0; font-size: 16px;">${escapeHtml(name)}</h3>
+            ${props.type ? `<p style="margin: 0 0 3px 0; font-size: 12px;"><b>Type:</b> ${escapeHtml(props.type)}</p>` : ''}
+            ${props.opening_hours ? `<p style="margin: 0 0 5px 0; font-size: 12px;"><b>Hours:</b> ${escapeHtml(props.opening_hours)}</p>` : ''}
+            ${props.description ? `<p style="margin: 0 0 5px 0; font-size: 12px;">${escapeHtml(props.description)}</p>` : ''}
+            ${props.owner ? `<p style="margin: 0 0 5px 0; font-size: 12px;"><b>Added by:</b> ${escapeHtml(props.owner)}</p>` : ''}
             <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" style="color: #0078A8;">
                 Open in Google Maps ↗
             </a>
@@ -104,6 +134,7 @@ function onEachFeature(feature, layer) {
 }
 
 loadAllData();
+loadSpots(); 
 
 
 //filter function and load edits
@@ -134,6 +165,12 @@ function filterAndRenderMarkers() {
             });
         }
     }
+
+    // show the contributor spots when their toggle is checked
+    const contribToggle = document.getElementById('contributorToggle');
+    if (contribToggle && contribToggle.checked && spotGeojsonData) {
+        addGeoJSONToLayer(spotGeojsonData);
+    }
     
 }
 
@@ -146,6 +183,12 @@ if (cafeToggle) {
 const sfuToggle = document.getElementById('SFUToggle');
 if (sfuToggle) {
     sfuToggle.addEventListener('change', filterAndRenderMarkers);
+}
+
+// redraw when the contributor spots toggle changes
+const contributorToggle = document.getElementById('contributorToggle');
+if (contributorToggle) {
+    contributorToggle.addEventListener('change', filterAndRenderMarkers);
 }
 
 // Listen for changes on all SFU category checkboxes
