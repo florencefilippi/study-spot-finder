@@ -15,6 +15,29 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
 
+//Initialize Search Control attached to markersLayer
+const searchControl = new L.Control.Search({
+    layer: markersLayer,
+    propertyName: 'name',          
+    initial: false,                // Matches substring anywhere in the name, not just start
+    zoom: 17,
+    collapsed: false,               // Keep the search bar expanded
+    marker: false,                 
+    textPlaceholder: 'Search cafes & study spots...',
+    moveToLocation: function (latlng, title, map) {
+        map.setView(latlng, 17);
+    }
+});
+
+// Open the popup automatically when a search result is clicked
+searchControl.on('search:locationfound', function (e) {
+    if (e.layer._popup) {
+        e.layer.openPopup();
+    }
+});
+
+map.addControl(searchControl);
+
 //Global variables
 let cafeGeojsonData = null;
 let sfuGeojsonData = null;

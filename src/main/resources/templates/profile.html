@@ -1,17 +1,63 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments :: head('Profile')}"></head>
-<body>
-  <div th:replace="~{fragments :: navbar}"></div>
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head th:replace="~{fragments :: head('Profile')}"></head>
+  <body>
+    <div th:replace="~{fragments :: navbar}"></div>
 
-  <main>
-    <div class="card">
-      <h1>Profile</h1>
-      <!-- USER LOGIN INFO -->
-      <p>Your profile will show up here.</p>
-    </div>
-  </main>
+    <main>
+      <div class="card">
+        <h1>Profile</h1>
+        <p class="success" th:if="${param.saved}">
+          Profile saved successfully!
+        </p>
+        <!--Edit Profile-->
+        <div th:if="${param.edit != null or firstTime}">
+          <form class="stack" th:action="@{/profile}" method="post">
+            <label for="name">Name:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              th:value="${profile.name}"
+              required
+            />
 
-  <div th:replace="~{fragments :: footer}"></div>
-</body>
+            <!-- Contributors see company and location; everyone else sees school and major -->
+            <th:block sec:authorize="hasRole('CONTRIBUTOR')">
+              <label for="company">Company:</label>
+              <input type="text" id="company" name="company" th:value="${profile.company}" />
+              <label for="locationName">Location name:</label>
+              <input type="text" id="locationName" name="locationName" th:value="${profile.locationName}" />
+            </th:block>
+            <th:block sec:authorize="!hasRole('CONTRIBUTOR')">
+              <label for="school">School:</label>
+              <input type="text" id="school" name="school" th:value="${profile.school}" />
+              <label for="major">Major:</label>
+              <input type="text" id="major" name="major" th:value="${profile.major}" />
+            </th:block>
+
+            <button type="submit" class="btn">Save</button>
+          </form>
+        </div>
+
+        <!--View Profile-->
+        <div th:unless="${param.edit != null or firstTime}">
+          <p><strong>Name:</strong> <span th:text="${profile.name}"></span></p>
+
+          <th:block sec:authorize="hasRole('CONTRIBUTOR')">
+            <p><strong>Company:</strong> <span th:text="${profile.company}"></span></p>
+            <p><strong>Location name:</strong> <span th:text="${profile.locationName}"></span></p>
+          </th:block>
+          <th:block sec:authorize="!hasRole('CONTRIBUTOR')">
+            <p><strong>School:</strong> <span th:text="${profile.school}"></span></p>
+            <p><strong>Major:</strong> <span th:text="${profile.major}"></span></p>
+          </th:block>
+
+          <a th:href="@{/profile?edit=true}" class="btn">Edit Profile</a>
+        </div>
+      </div>
+    </main>
+
+    <div th:replace="~{fragments :: footer}"></div>
+  </body>
 </html>
