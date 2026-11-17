@@ -15,8 +15,23 @@
 
             <p th:if="${location.description != null}">
                 <strong>Description:</strong> <span th:text="${location.description}">A spot with great coffee.</span>
-            </p>
+            </p>            
         </div>
+
+        <section class="reviews">
+            <h2>Reviews</h2>
+
+            <p th:if="${#lists.isEmpty(reviews)}">No reviews yet.</p>
+
+            <article class="review" th:each="review : ${reviews}">
+                <p class="review-meta">
+                <strong th:text="${review.author}">username</strong>
+                · <span th:text="${review.postedOn}">date</span>
+                </p>
+                <p class="review-text" th:text="${review.text}">review text</p>
+            </article>
+        </section>
+      
     </main>
 
     <div th:replace="~{fragments :: footer}"></div>
