@@ -18,6 +18,27 @@
             </p>            
         </div>
 
+        <!-- Messages -->
+        <p class="success" th:if="${success}" th:text="${success}"></p>
+        <p class="error" th:if="${error}" th:text="${error}"></p>
+
+        <!-- Already reviewed: no form  -->
+        <p th:if="${alreadyReviewed and error == null}">You've already reviewed this spot.</p>
+
+        <form th:unless="${alreadyReviewed}" class="stack"
+        th:action="@{/locations/reviews}" method="post">
+
+            <input type="hidden" name="locationId" th:value="${location.id}">
+
+            <label for="text">Your review</label>
+            <textarea id="text" name="text" rows="5" required
+                th:maxlength="${maxLength}"
+                th:text="${text}">
+            </textarea>
+
+            <button class="btn" type="submit">Submit review</button>
+        </form>
+
         <section class="reviews">
             <h2>Reviews</h2>
 
