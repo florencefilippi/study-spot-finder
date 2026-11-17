@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Study Spot')}"></head>
+<body>
+  <div th:replace="~{fragments :: navbar}"></div>
+
+  <main class="narrow">
+    <div class="card">
+      <h1 th:text="${heading}">Add a study spot</h1>
+
+      <form class="stack" th:action="@{${formAction}}" th:object="${spotForm}" method="post">
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" th:field="*{name}">
+        <p class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+
+        <label for="type">Type:</label>
+        <select id="type" th:field="*{type}">
+          <option value="">Choose a type</option>
+          <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+        </select>
+        <p class="error" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></p>
+
+        <label for="latitude">Latitude (for example 49.2781):</label>
+        <input type="text" id="latitude" th:field="*{latitude}">
+        <p class="error" th:if="${#fields.hasErrors('latitude')}" th:errors="*{latitude}"></p>
+
+        <label for="longitude">Longitude (for example -122.9199):</label>
+        <input type="text" id="longitude" th:field="*{longitude}">
+        <p class="error" th:if="${#fields.hasErrors('longitude')}" th:errors="*{longitude}"></p>
+
+        <label for="openingHours">Opening hours (optional):</label>
+        <input type="text" id="openingHours" th:field="*{openingHours}">
+        <p class="error" th:if="${#fields.hasErrors('openingHours')}" th:errors="*{openingHours}"></p>
+
+        <label for="description">Description (optional):</label>
+        <textarea id="description" rows="4" th:field="*{description}"></textarea>
+        <p class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+
+        <button class="btn" type="submit">Save</button>
+        <a th:href="@{/contributor/spots}">Cancel</a>
+      </form>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>
