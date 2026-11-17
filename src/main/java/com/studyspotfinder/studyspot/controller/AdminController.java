@@ -1,5 +1,6 @@
 package com.studyspotfinder.studyspot.controller;
 
+import com.studyspotfinder.studyspot.repository.ProfileRepository;
 import com.studyspotfinder.studyspot.repository.UserRepository;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
@@ -21,9 +22,11 @@ import java.util.Optional;
 public class AdminController {
 
     private final UserRepository userRepository;
+    private final ProfileRepository profileRepository;
 
-    public AdminController(UserRepository userRepository) {
+    public AdminController(UserRepository userRepository, ProfileRepository profileRepository) {
         this.userRepository = userRepository;
+        this.profileRepository = profileRepository;
     }
 
     @GetMapping("/users")
@@ -71,6 +74,7 @@ public class AdminController {
             return "redirect:/admin/users";
         }
 
+        profileRepository.findByUser(user).ifPresent(profileRepository::delete);
         userRepository.delete(user);
         redirect.addFlashAttribute("success", "Deleted user " + user.getUsername() + ".");
         return "redirect:/admin/users";
