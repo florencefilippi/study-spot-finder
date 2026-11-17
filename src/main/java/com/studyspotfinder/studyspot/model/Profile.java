@@ -58,4 +58,12 @@ public class Profile {
     public void setMajor(String major){
         this.major = major;
     }
+    
+    private String company;
+    private String locationName;
+
+    public String getCompany() { return company; }
+    public void setCompany(String company) { this.company = company; }
+    public String getLocationName() { return locationName; }
+    public void setLocationName(String locationName) { this.locationName = locationName; }
 }
