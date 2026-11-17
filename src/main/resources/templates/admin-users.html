@@ -36,7 +36,7 @@
                     <option th:each="r : ${roles}"
                             th:value="${r}"
                             th:text="${r}"
-                            th:seleccted="${r == user.role}"></option>
+                            th:selected="${r == user.role}"></option>
                   </select>
                   <button type="submit" class="btn btn-small">Update</button>
                 </form>
