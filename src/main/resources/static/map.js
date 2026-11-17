@@ -8,6 +8,16 @@ const sfuGeoJSONPath = 'data/sfu-studySpots.geojson';
 
 // Initialize a Layer Group for markers
 const markersLayer = L.layerGroup().addTo(map);
+const contributorIcon = L.divIcon({
+    className: 'contributor-marker',
+    html: '<svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg">' +
+          '<path d="M12.5 0C5.6 0 0 5.6 0 12.5 0 21.9 12.5 41 12.5 41S25 21.9 25 12.5C25 5.6 19.4 0 12.5 0z" ' +
+          'fill="#2e7d32" stroke="#1b5e20" stroke-width="1.5"/>' +
+          '<circle cx="12.5" cy="12.5" r="5" fill="white"/></svg>',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34]
+});
 
 // 2. Add OpenStreetMap tile layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -81,10 +91,11 @@ async function loadSpots() {
     }
 }
 
-function addGeoJSONToLayer(geojsonData, filterFunction = null) {
+function addGeoJSONToLayer(geojsonData, filterFunction = null, icon = null) {
     L.geoJSON(geojsonData, {
         pointToLayer: function (feature, latlng) {
-            return L.marker(latlng);
+            // use the custom icon when one is given, otherwise the default blue pin
+            return L.marker(latlng, icon ? { icon: icon } : {});
         },
         filter: filterFunction,
         onEachFeature: onEachFeature
@@ -169,7 +180,7 @@ function filterAndRenderMarkers() {
     // show the contributor spots when their toggle is checked
     const contribToggle = document.getElementById('contributorToggle');
     if (contribToggle && contribToggle.checked && spotGeojsonData) {
-        addGeoJSONToLayer(spotGeojsonData);
+        addGeoJSONToLayer(spotGeojsonData, null, contributorIcon);
     }
     
 }
