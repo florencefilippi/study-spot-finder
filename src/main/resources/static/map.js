@@ -91,14 +91,21 @@ function onEachFeature(feature, layer) {
 
     const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}+(${lat},${lon})`;
 
+    // url that goes to a locations details
+    const detailsUrl = feature.id ? `/locations/details?id=${encodeURIComponent(feature.id)}` : '';
+
     layer.bindPopup(`
         <div style="font-family: sans-serif;">
             <h3 style="margin: 0 0 5px 0; font-size: 16px;">${name}</h3>
             ${props.type ? `<p style="margin: 0 0 3px 0; font-size: 12px;"><b>Type:</b> ${props.type}</p>` : ''}
             ${props.opening_hours ? `<p style="margin: 0 0 5px 0; font-size: 12px;"><b>Hours:</b> ${props.opening_hours}</p>` : ''}
+
             <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" style="color: #0078A8;">
                 Open in Google Maps ↗
             </a>
+            ${detailsUrl ? 
+                `<a href="${detailsUrl}" style="color: #0078A8; display: block;">View Details &amp; Reviews</a>` : ''
+            }
         </div>
     `);
 }

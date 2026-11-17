@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(${location.name})}"></head>
+<body>
+    <!--Nav bar-->
+    <div th:replace="~{fragments :: navbar}"></div>
+
+    <main>
+        <div class="card">
+            <h1 th:text="${location.name}">Location Name</h1>
+
+            <p th:if="${location.type != null}">
+                <strong>Type:</strong> <span th:text="${location.type}">Cafe</span>
+            </p>
+
+            <p th:if="${location.description != null}">
+                <strong>Description:</strong> <span th:text="${location.description}">A spot with great coffee.</span>
+            </p>            
+        </div>
+
+        <!-- Messages -->
+        <p class="success" th:if="${success}" th:text="${success}"></p>
+        <p class="error" th:if="${error}" th:text="${error}"></p>
+
+        <!-- Already reviewed: no form  -->
+        <p th:if="${alreadyReviewed and error == null}">You've already reviewed this spot.</p>
+
+        <form th:unless="${alreadyReviewed}" class="stack"
+        th:action="@{/locations/reviews}" method="post">
+
+            <input type="hidden" name="locationId" th:value="${location.id}">
+
+            <label for="text">Your review</label>
+            <textarea id="text" name="text" rows="5" required
+                th:maxlength="${maxLength}"
+                th:text="${text}">
+            </textarea>
+
+            <button class="btn" type="submit">Submit review</button>
+        </form>
+
+        <section class="reviews">
+            <h2>Reviews</h2>
+
+            <p th:if="${#lists.isEmpty(reviews)}">No reviews yet.</p>
+
+            <article class="review" th:each="review : ${reviews}">
+                <p class="review-meta">
+                <strong th:text="${review.author}">username</strong>
+                · <span th:text="${review.postedOn}">date</span>
+                </p>
+                <p class="review-text" th:text="${review.text}">review text</p>
+            </article>
+        </section>
+      
+    </main>
+
+    <div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>
