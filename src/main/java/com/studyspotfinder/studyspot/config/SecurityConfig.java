@@ -16,7 +16,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, RoleRedirectHandler roleRedirectHandler) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/login", "/signup", "/css/**", "/js/**", "/error")
@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .authenticated())
             .formLogin(form -> form
                 .loginPage("/login")
-                .successHandler(roleRedirectHandler)
+                .defaultSuccessUrl("/home", true)
                 .permitAll())
             .logout(logout -> logout
                 .logoutSuccessUrl("/login?logout")
