@@ -7,4 +7,10 @@ public record LocationSummary(
     String name,
     String type,
     String description
-) {}
+) {
+    // fix for EL1008E bug in the location-details html
+    public String getId() { return id; }
+    public String getName() { return name; }
+    public String getType() { return type; }
+    public String getDescription() { return description; }    
+}
