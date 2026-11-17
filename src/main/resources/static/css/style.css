@@ -127,3 +127,10 @@ tbody tr:hover { background: #fafafa; }
   font-family: inherit;
 }
 button.btn-small { padding: 6px 12px; font-size: 14px; margin-top: 0; }
+
+button.btn-danger {
+  background: white;
+  color: #a6192e;
+  border: 1px solid #a6192e;
+}
+button.btn-danger:hover { background: #a6192e; color: white; }

@@ -53,4 +53,26 @@ public class AdminController {
         redirect.addFlashAttribute("success", "Changed " + user.getUsername() + "'s role to " + role + ".");
         return "redirect:/admin/users";
     }
+
+    @PostMapping("/users/{id}/delete")
+    public String deleteUser(@PathVariable Long id,
+                         Principal principal,
+                         RedirectAttributes redirect) {
+
+        Optional<User> found = userRepository.findById(id);
+        if (found.isEmpty()) {
+            redirect.addFlashAttribute("error", "User not found.");
+            return "redirect:/admin/users";
+        }
+
+        User user = found.get();
+        if (user.getUsername().equals(principal.getName())) {
+            redirect.addFlashAttribute("error", "You can't delete your own account.");
+            return "redirect:/admin/users";
+        }
+
+        userRepository.delete(user);
+        redirect.addFlashAttribute("success", "Deleted user " + user.getUsername() + ".");
+        return "redirect:/admin/users";
+    }
 }
