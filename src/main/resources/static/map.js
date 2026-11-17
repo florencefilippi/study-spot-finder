@@ -8,6 +8,16 @@ const sfuGeoJSONPath = 'data/sfu-studySpots.geojson';
 
 // Initialize a Layer Group for markers
 const markersLayer = L.layerGroup().addTo(map);
+const contributorIcon = L.divIcon({
+    className: 'contributor-marker',
+    html: '<svg width="25" height="41" viewBox="0 0 25 41" xmlns="http://www.w3.org/2000/svg">' +
+          '<path d="M12.5 0C5.6 0 0 5.6 0 12.5 0 21.9 12.5 41 12.5 41S25 21.9 25 12.5C25 5.6 19.4 0 12.5 0z" ' +
+          'fill="#2e7d32" stroke="#1b5e20" stroke-width="1.5"/>' +
+          '<circle cx="12.5" cy="12.5" r="5" fill="white"/></svg>',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34]
+});
 
 // 2. Add OpenStreetMap tile layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -41,6 +51,7 @@ map.addControl(searchControl);
 //Global variables
 let cafeGeojsonData = null;
 let sfuGeojsonData = null;
+let spotGeojsonData = null; 
 
 
 async function loadAllData() {
@@ -65,14 +76,41 @@ async function loadAllData() {
         console.error("Error loading GeoJSON files:", error);
     }
 }
-function addGeoJSONToLayer(geojsonData, filterFunction = null) {
+
+// It is separate from loadAllData so a problem here cannot break the cafes and SFU spots.
+async function loadSpots() {
+    try {
+        const res = await fetch('/api/spots');
+        if (!res.ok) {
+            throw new Error("Failed to load contributor spots.");
+        }
+        spotGeojsonData = await res.json();
+        filterAndRenderMarkers();
+    } catch (error) {
+        console.error("Error loading contributor spots:", error);
+    }
+}
+
+function addGeoJSONToLayer(geojsonData, filterFunction = null, icon = null) {
     L.geoJSON(geojsonData, {
         pointToLayer: function (feature, latlng) {
-            return L.marker(latlng);
+            // use the custom icon when one is given, otherwise the default blue pin
+            return L.marker(latlng, icon ? { icon: icon } : {});
         },
         filter: filterFunction,
         onEachFeature: onEachFeature
     }).addTo(markersLayer);
+}
+
+// spot names and descriptions, so without this someone could put HTML or a script
+// in a name and it would run for everyone who opens the popup.
+function escapeHtml(text) {
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 
 function onEachFeature(feature, layer) {
@@ -91,15 +129,17 @@ function onEachFeature(feature, layer) {
 
     const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}+(${lat},${lon})`;
 
-    // url that goes to a locations details
+    // url that goes to a location's details page (only for features with an id)
     const detailsUrl = feature.id ? `/locations/details?id=${encodeURIComponent(feature.id)}` : '';
 
+    // description and owner only exist on contributor spots, so they only show for those.
     layer.bindPopup(`
         <div style="font-family: sans-serif;">
-            <h3 style="margin: 0 0 5px 0; font-size: 16px;">${name}</h3>
-            ${props.type ? `<p style="margin: 0 0 3px 0; font-size: 12px;"><b>Type:</b> ${props.type}</p>` : ''}
-            ${props.opening_hours ? `<p style="margin: 0 0 5px 0; font-size: 12px;"><b>Hours:</b> ${props.opening_hours}</p>` : ''}
-
+            <h3 style="margin: 0 0 5px 0; font-size: 16px;">${escapeHtml(name)}</h3>
+            ${props.type ? `<p style="margin: 0 0 3px 0; font-size: 12px;"><b>Type:</b> ${escapeHtml(props.type)}</p>` : ''}
+            ${props.opening_hours ? `<p style="margin: 0 0 5px 0; font-size: 12px;"><b>Hours:</b> ${escapeHtml(props.opening_hours)}</p>` : ''}
+            ${props.description ? `<p style="margin: 0 0 5px 0; font-size: 12px;">${escapeHtml(props.description)}</p>` : ''}
+            ${props.owner ? `<p style="margin: 0 0 5px 0; font-size: 12px;"><b>Added by:</b> ${escapeHtml(props.owner)}</p>` : ''}
             <a href="${googleMapsUrl}" target="_blank" rel="noopener noreferrer" style="color: #0078A8;">
                 Open in Google Maps ↗
             </a>
@@ -111,6 +151,7 @@ function onEachFeature(feature, layer) {
 }
 
 loadAllData();
+loadSpots(); 
 
 
 //filter function and load edits
@@ -141,6 +182,12 @@ function filterAndRenderMarkers() {
             });
         }
     }
+
+    // show the contributor spots when their toggle is checked
+    const contribToggle = document.getElementById('contributorToggle');
+    if (contribToggle && contribToggle.checked && spotGeojsonData) {
+        addGeoJSONToLayer(spotGeojsonData, null, contributorIcon);
+    }
     
 }
 
@@ -153,6 +200,12 @@ if (cafeToggle) {
 const sfuToggle = document.getElementById('SFUToggle');
 if (sfuToggle) {
     sfuToggle.addEventListener('change', filterAndRenderMarkers);
+}
+
+// redraw when the contributor spots toggle changes
+const contributorToggle = document.getElementById('contributorToggle');
+if (contributorToggle) {
+    contributorToggle.addEventListener('change', filterAndRenderMarkers);
 }
 
 // Listen for changes on all SFU category checkboxes
