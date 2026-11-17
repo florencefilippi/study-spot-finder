@@ -31,9 +31,9 @@ public class SpotApiController {
 
             Map<String, Object> props = new LinkedHashMap<>();
             props.put("name", s.getName());
-            props.put("category", s.getType());
+            props.put("type", s.getType());
             props.put("description", s.getDescription());
-            props.put("openingHours", s.getOpeningHours());
+            props.put("opening_hours", s.getOpeningHours());
             props.put("owner", s.getOwnerUsername());
 
             Map<String, Object> feature = new LinkedHashMap<>();
