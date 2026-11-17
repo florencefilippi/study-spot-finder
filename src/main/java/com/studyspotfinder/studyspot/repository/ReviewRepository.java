@@ -12,7 +12,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long>{
     // all reviews for a location with newest first
     // loads each reviews in same query
     @EntityGraph(attributePaths = "author")
-    List<Review> findByLocationOrderByCreatedAtDesc(String locationId);
+    List<Review> findByLocationIdOrderByCreatedAtDesc(String locationId);
 
     // has the user reviewed this location
     boolean existsByAuthor_UsernameAndLocationId(String username, String locationId);
