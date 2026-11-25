@@ -210,3 +210,11 @@ button.btn-danger {
   border: 1px solid #a6192e;
 }
 button.btn-danger:hover { background: #a6192e; color: white; }
+
+
+/* Location details reviews */
+.review-text {
+    /* Allows long words or unbroken text strings to wrap onto the next line */
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
