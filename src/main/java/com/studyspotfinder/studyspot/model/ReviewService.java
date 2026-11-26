@@ -39,10 +39,12 @@ public class ReviewService {
     }
 
     // newest first
+    // mine is set for current users review
     @Transactional(readOnly = true)
-    public List<ReviewView> getReviewsForLocation(String locationId) {
+    public List<ReviewView> getReviewsForLocation(String locationId, String currentUsername) {
         // convert list into a stream
-        return reviewRepository.findByLocationIdOrderByCreatedAtDesc(locationId).stream().map(this::toView).toList();
+        return reviewRepository.findByLocationIdOrderByCreatedAtDesc(locationId).stream()
+            .map(review -> toView(review, currentUsername)).toList();
     }
 
     public boolean hasReviewed(String username, String locationId) {
@@ -73,10 +75,17 @@ public class ReviewService {
     }
 
     // helper to map into ReviewView
-    private ReviewView toView(Review review) {
-        return new ReviewView(review.getAuthor().getUsername(), 
-                                review.getText(), 
-                                DATE_FORMAT.format(review.getCreatedAt()));
+    private ReviewView toView(Review review, String currentUsername) {
+        String authorName = review.getAuthor().getUsername();
+        boolean mine = currentUsername != null && currentUsername.equals(authorName);
+
+        return new ReviewView(
+            review.getId(),
+            authorName, 
+            review.getText(), 
+            DATE_FORMAT.format(review.getCreatedAt()),
+            mine
+        );
     }
 
     // Shared by add and edit

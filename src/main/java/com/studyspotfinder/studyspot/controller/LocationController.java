@@ -65,7 +65,7 @@ public class LocationController {
     // everything the details page needs
     private String showDetails(LocationSummary location, String username, Model model) {
         model.addAttribute("location", location);
-        model.addAttribute("reviews", reviewService.getReviewsForLocation(location.id()));
+        model.addAttribute("reviews", reviewService.getReviewsForLocation(location.id(), username));
         model.addAttribute("alreadyReviewed", reviewService.hasReviewed(username, location.id()));
         model.addAttribute("maxLength", Review.MAX_TEXT_LENGTH);
         return "location-details";
