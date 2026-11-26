@@ -76,6 +76,45 @@ public class LocationController {
         
         return "redirect:/locations/details";
     }
+
+    @GetMapping("/locations/reviews/{id}/edit")
+    public String editReviewForm(@PathVariable Long id, Principal principal, Model model) {
+        // throws 404 or 403 if review is missing or not yours
+        Review review = reviewService.findOwnedReview(id, principal.getName());
+
+        showEditForm(review, review.getText(), model);
+
+        return "review-form";
+    }
+
+    @PostMapping("/locations/reviews/{id}/edit")
+    public String updateReview(
+        @PathVariable Long id,
+        @RequestParam(defaultValue = "") String text,
+        Principal principal,
+        Model model,
+        RedirectAttributes redirectAttributes
+    ) {
+        String username = principal.getName();
+
+        try {
+            Review review = reviewService.updateReview(id, username, text);
+
+            redirectAttributes.addAttribute("id", review.getLocationId());
+            redirectAttributes.addFlashAttribute("success", "Review updated.");
+
+            return "redirect:/locations/details";
+
+        } catch (ReviewValidationException e) {
+            // show the edit page again with the error keep what was type
+            Review review = reviewService.findOwnedReview(id, username);
+
+            model.addAttribute("error", e.getMessage());
+            showEditForm(review, text, model);
+
+            return "review-form";
+        }
+    }
     
 
     // everything the details page needs
@@ -85,5 +124,13 @@ public class LocationController {
         model.addAttribute("alreadyReviewed", reviewService.hasReviewed(username, location.id()));
         model.addAttribute("maxLength", Review.MAX_TEXT_LENGTH);
         return "location-details";
-    } 
+    }
+
+    // everything edit page needs
+    private void showEditForm(Review review, String text, Model model) {
+        model.addAttribute("reviewId", review.getId());
+        model.addAttribute("locationId", review.getLocationId());
+        model.addAttribute("text", text);
+        model.addAttribute("maxLength", Review.MAX_TEXT_LENGTH);
+    }
 }
