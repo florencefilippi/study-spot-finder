@@ -57,21 +57,14 @@ public class ReviewService {
             throw new LocationNotFoundException(locationId);
         }
 
-        // Text. trim so surrounding spaces dont count
-        String text = (rawText == null) ? "" : rawText.strip();
-        if (text.isEmpty()) {
-            throw new ReviewValidationException("Review can't be empty.");
-        }
-        if (text.length() > Review.MAX_TEXT_LENGTH) {
-            throw new ReviewValidationException("Review must be " + Review.MAX_TEXT_LENGTH + " characters or fewer.");
-        }
+        String text = cleanText(rawText);
 
         // one review per user per location
         if (hasReviewed(username, locationId)) {
             throw new ReviewValidationException(ALREADY_REVIEWED);
         }
 
-        // get username
+        // load logged in user
         User author = userRepository.findByUsername(username).orElseThrow(() -> new IllegalStateException("Logged in user not found: " + username));
         
         // save
@@ -84,5 +77,22 @@ public class ReviewService {
         return new ReviewView(review.getAuthor().getUsername(), 
                                 review.getText(), 
                                 DATE_FORMAT.format(review.getCreatedAt()));
+    }
+
+    // Shared by add and edit
+    // convert \r\n to \n before submitting
+    private String cleanText(String rawText) {
+        // Text. trim so surrounding spaces dont count
+        String normalized = (rawText == null) ? "" : rawText.replace("\r\n", "\n");
+        String cleaned = normalized.strip();
+
+        if (cleaned.isEmpty()) {
+            throw new ReviewValidationException("Review can't be empty.");
+        }
+        if (cleaned.length() > Review.MAX_TEXT_LENGTH) {
+            throw new ReviewValidationException("Review must be " + Review.MAX_TEXT_LENGTH + " characters or fewer.");
+        }
+
+        return cleaned;
     }
 }
