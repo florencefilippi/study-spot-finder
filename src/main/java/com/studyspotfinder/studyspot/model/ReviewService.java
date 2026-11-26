@@ -6,8 +6,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.studyspotfinder.studyspot.repository.ReviewRepository;
 import com.studyspotfinder.studyspot.repository.UserRepository;
@@ -72,6 +74,28 @@ public class ReviewService {
         // save
         // if two submits arrive at same moment both could pass step 3 might need fix
         return reviewRepository.saveAndFlush(new Review(locationId, author, text, Instant.now()));
+    }
+
+    // returns the review only if it belongs to this user
+    // 404 if doesnt exist, 403 if someone else wrote it
+    @Transactional(readOnly = true)
+    public Review findOwnedReview(Long id, String username) {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        if (!review.getAuthor().getUsername().equals(username)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN); // not your review
+        }
+
+        return review;
+    }
+
+    // deletes users own review and returns location id for redirect
+    @Transactional
+    public String deleteReview(Long id, String username) {
+        Review review = findOwnedReview(id, username);
+        reviewRepository.delete(review);
+        return review.getLocationId();
     }
 
     // helper to map into ReviewView

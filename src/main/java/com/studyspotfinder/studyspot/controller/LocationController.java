@@ -5,6 +5,7 @@ import java.security.Principal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -16,6 +17,8 @@ import com.studyspotfinder.studyspot.service.LocationNotFoundException;
 import com.studyspotfinder.studyspot.service.ReviewValidationException;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 @Controller 
@@ -61,6 +64,19 @@ public class LocationController {
         redirectAttributes.addFlashAttribute("success", "Review posted.");
         return "redirect:/locations/details";
     }
+
+    @PostMapping("/locations/reviews/{id}/delete")
+    public String deleteReview(@PathVariable Long id, Principal principal, RedirectAttributes redirectAttributes) {
+        // throws 404 or 403 if review is missing or not yours
+        String locationId = reviewService.deleteReview(id, principal.getName());
+
+        // refreshing the next page repats the GET
+        redirectAttributes.addAttribute("id", locationId);
+        redirectAttributes.addFlashAttribute("success", "Review deleted.");
+        
+        return "redirect:/locations/details";
+    }
+    
 
     // everything the details page needs
     private String showDetails(LocationSummary location, String username, Model model) {

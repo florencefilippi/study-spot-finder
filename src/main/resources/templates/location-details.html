@@ -54,6 +54,14 @@
                         <span th:text="${review.postedOn}">date</span>
                     </p>
                     <p class="review-text" th:text="${review.text}">review text</p>
+
+                    <!-- only on the logged in users own review -->
+                    <div class="inline-form" th:if="${review.mine}">
+                        <form th:action="@{/locations/reviews/{id}/delete(id=${review.id})}" method="post"
+                              onsubmit="return confirm('Delete your review? This cannot be undone.');">
+                            <button type="submit" class="btn btn-small btn-danger">Delete</button>
+                        </form>
+                    </div>
                 </article>
             </section>
         </div>
