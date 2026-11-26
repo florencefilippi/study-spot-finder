@@ -61,4 +61,7 @@ public class Review {
     public User getAuthor() { return author; }
     public String getText() { return text; }
     public Instant getCreatedAt() { return createdAt; }
+
+    // setters
+    public void setText(String text) {this.text = text; }
 }

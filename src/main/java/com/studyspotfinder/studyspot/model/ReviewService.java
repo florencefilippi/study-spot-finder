@@ -98,6 +98,14 @@ public class ReviewService {
         return review.getLocationId();
     }
 
+    // changes the text of users own review
+    @Transactional
+    public Review updateReview(Long id, String username, String rawText) {
+        Review review = findOwnedReview(id, username);
+        review.setText(cleanText(rawText));
+        return reviewRepository.save(review);
+    }
+
     // helper to map into ReviewView
     private ReviewView toView(Review review, String currentUsername) {
         String authorName = review.getAuthor().getUsername();
