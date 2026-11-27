@@ -146,6 +146,7 @@ function onEachFeature(feature, layer) {
             ${detailsUrl ? 
                 `<a href="${detailsUrl}" style="color: #0078A8; display: block;">View Details &amp; Reviews</a>` : ''
             }
+            ${feature.id ? `<button class="save-spot-btn" data-spot-id="${escapeHtml(feature.id)}" data-spot-name="${escapeHtml(name)}">Save</button>` : ''}
         </div>
     `);
 }
@@ -207,6 +208,34 @@ const contributorToggle = document.getElementById('contributorToggle');
 if (contributorToggle) {
     contributorToggle.addEventListener('change', filterAndRenderMarkers);
 }
+
+// Listen for click on the location save button on the popup
+document.addEventListener('click', async function (event) {
+    const btn = event.target.closest('.save-spot-btn');
+    if(!btn){
+        return;
+    }
+
+    const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+    const response = await fetch('/saved', {
+        method: 'POST',
+        headers: { [csrfHeader]: csrfToken},
+        body: new URLSearchParams({
+            spotId: btn.dataset.spotId,
+            spotName: btn.dataset.spotName
+        })
+    });
+
+    if(response.ok){
+        btn.textContent = "Saved ✓";
+        btn.disabled = true;
+    }
+    else{
+        btn.textContent = "Couldn't save the location";
+    }
+});
 
 // Listen for changes on all SFU category checkboxes
 document.querySelectorAll('#filterForm input[name="category"]').forEach(cb => {
