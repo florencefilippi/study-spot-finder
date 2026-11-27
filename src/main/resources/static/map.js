@@ -19,6 +19,10 @@ const contributorIcon = L.divIcon({
     popupAnchor: [1, -34]
 });
 
+
+const currentUserEl = document.getElementById('currentUser');
+const currentUser = currentUserEl ? currentUserEl.textContent.trim() : '';
+
 // 2. Add OpenStreetMap tile layer
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -93,9 +97,9 @@ async function loadSpots() {
 
 function addGeoJSONToLayer(geojsonData, filterFunction = null, icon = null) {
     L.geoJSON(geojsonData, {
-        pointToLayer: function (feature, latlng) {
-            // use the custom icon when one is given, otherwise the default blue pin
-            return L.marker(latlng, icon ? { icon: icon } : {});
+                pointToLayer: function (feature, latlng) {
+            const chosen = typeof icon === 'function' ? icon(feature) : icon;
+            return L.marker(latlng, chosen ? { icon: chosen } : {});
         },
         filter: filterFunction,
         onEachFeature: onEachFeature
@@ -186,7 +190,9 @@ function filterAndRenderMarkers() {
     // show the contributor spots when their toggle is checked
     const contribToggle = document.getElementById('contributorToggle');
     if (contribToggle && contribToggle.checked && spotGeojsonData) {
-        addGeoJSONToLayer(spotGeojsonData, null, contributorIcon);
+         addGeoJSONToLayer(spotGeojsonData, null, function (feature) {
+            return feature.properties.owner === currentUser ? contributorIcon : null;
+        });
     }
     
 }

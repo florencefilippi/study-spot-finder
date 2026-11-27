@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" 
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,13 +12,13 @@
 </head>
 <body>
     <div th:replace="~{fragments :: navbar}"></div>
-
+        <div id="currentUser" hidden sec:authentication="name"></div>
     <div id="filterForm">
     <h4>Filter Map:</h4>
     <!-- Cafe toggle (applies to vancouver-cafes.geojson) -->
     <label><input type="checkbox" id="cafeToggle" value = "Cafes" checked>Cafes</label><br>
     <label><input type="checkbox" id = "SFUToggle" value = "Study Spaces at SFU" checked>SFU</label><br>
-    <label><input type="checkbox" id="contributorToggle" value="Contributor spots" checked><span style="color:#2e7d32">●</span> Contributor spots</label>
+    <label><input type="checkbox" id="contributorToggle" value="Contributor spots" checked><span style="color:#2a81cb">●</span> Contributor spots</label>
     <hr>
     <h4>SFU Study Spaces</h4>
     <h4>SFU Study Spaces</h4>
