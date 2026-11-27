@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.studyspotfinder.studyspot.model.Spot;
 import com.studyspotfinder.studyspot.repository.SpotRepository;
-import com.studyspotfinder.studyspot.model.Spot;
+
 @RestController
 public class SpotApiController {
 
