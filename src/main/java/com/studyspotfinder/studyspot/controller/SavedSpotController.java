@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.ui.Model;
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller 
@@ -42,4 +45,11 @@ public class SavedSpotController {
 
         return "saved";
     }
+
+    /*@PostMapping("/saved")
+    public String postSavedSpots(Authentication authentication, @RequestParam String spotId) {
+        
+    }*/
+    
+    
 }
