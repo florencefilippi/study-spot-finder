@@ -20,6 +20,7 @@
         <li><a th:href="@{/home}">Home</a></li>
         <li><a th:href="@{/map}">Map</a></li>
         <li><a th:href="@{/profile}">Profile</a></li>
+        <li><a th:href="@{/saved}">Saved</a></li>
         <li sec:authorize="hasRole('CONTRIBUTOR')"><a th:href="@{/contributor}">Contributor</a></li>
         <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/admin}">Admin</a></li>
       </ul>

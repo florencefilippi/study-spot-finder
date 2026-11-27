@@ -1,5 +1,9 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
   <head th:replace="~{fragments :: head('Profile')}"></head>
   <body>
     <div th:replace="~{fragments :: navbar}"></div>
@@ -25,15 +29,35 @@
             <!-- Contributors see company and location; everyone else sees school and major -->
             <th:block sec:authorize="hasRole('CONTRIBUTOR')">
               <label for="company">Company:</label>
-              <input type="text" id="company" name="company" th:value="${profile.company}" />
+              <input
+                type="text"
+                id="company"
+                name="company"
+                th:value="${profile.company}"
+              />
               <label for="locationName">Location name:</label>
-              <input type="text" id="locationName" name="locationName" th:value="${profile.locationName}" />
+              <input
+                type="text"
+                id="locationName"
+                name="locationName"
+                th:value="${profile.locationName}"
+              />
             </th:block>
             <th:block sec:authorize="!hasRole('CONTRIBUTOR')">
               <label for="school">School:</label>
-              <input type="text" id="school" name="school" th:value="${profile.school}" />
+              <input
+                type="text"
+                id="school"
+                name="school"
+                th:value="${profile.school}"
+              />
               <label for="major">Major:</label>
-              <input type="text" id="major" name="major" th:value="${profile.major}" />
+              <input
+                type="text"
+                id="major"
+                name="major"
+                th:value="${profile.major}"
+              />
             </th:block>
 
             <button type="submit" class="btn">Save</button>
@@ -45,12 +69,22 @@
           <p><strong>Name:</strong> <span th:text="${profile.name}"></span></p>
 
           <th:block sec:authorize="hasRole('CONTRIBUTOR')">
-            <p><strong>Company:</strong> <span th:text="${profile.company}"></span></p>
-            <p><strong>Location name:</strong> <span th:text="${profile.locationName}"></span></p>
+            <p>
+              <strong>Company:</strong>
+              <span th:text="${profile.company}"></span>
+            </p>
+            <p>
+              <strong>Location name:</strong>
+              <span th:text="${profile.locationName}"></span>
+            </p>
           </th:block>
           <th:block sec:authorize="!hasRole('CONTRIBUTOR')">
-            <p><strong>School:</strong> <span th:text="${profile.school}"></span></p>
-            <p><strong>Major:</strong> <span th:text="${profile.major}"></span></p>
+            <p>
+              <strong>School:</strong> <span th:text="${profile.school}"></span>
+            </p>
+            <p>
+              <strong>Major:</strong> <span th:text="${profile.major}"></span>
+            </p>
           </th:block>
 
           <a th:href="@{/profile?edit=true}" class="btn">Edit Profile</a>

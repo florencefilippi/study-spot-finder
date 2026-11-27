@@ -1,0 +1,26 @@
+<!doctype html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+>
+  <head th:replace="~{fragments :: head('Saved')}"></head>
+  <body>
+    <div th:replace="~{fragments :: navbar}"></div>
+
+    <main>
+      <div class="card">
+        <h1>Saved Study Spots</h1>
+
+        <p th:if="${savedSpots.isEmpty()}">No spots saved yet.</p>
+
+        <ul th:unless="${savedSpots.isEmpty()}">
+          <li th:each="spot : ${savedSpots}" th:text="${spot.spotName}">
+            Spot Name
+          </li>
+        </ul>
+      </div>
+    </main>
+
+    <div th:replace="~{fragments :: footer}"></div>
+  </body>
+</html>
