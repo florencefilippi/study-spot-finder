@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.ui.Model;
 import java.util.List;
 
+
 @Controller 
 public class SavedSpotController {
     
@@ -41,5 +42,4 @@ public class SavedSpotController {
 
         return "saved";
     }
-    
 }
