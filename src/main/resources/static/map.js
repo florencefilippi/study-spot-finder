@@ -50,6 +50,7 @@ map.addControl(searchControl);
 
 //Global variables
 let cafeGeojsonData = null;
+let communityGeojsonData = null; // approved user suggestions
 let sfuGeojsonData = null;
 let spotGeojsonData = null; 
 
@@ -88,6 +89,20 @@ async function loadSpots() {
         filterAndRenderMarkers();
     } catch (error) {
         console.error("Error loading contributor spots:", error);
+    }
+}
+
+// Approved user suggestions. Separate so a problem here can't break the other pins.
+async function loadCommunitySpots() {
+    try {
+        const res = await fetch('/api/community-spots');
+        if (!res.ok) {
+            throw new Error("Failed to load community spots.");
+        }
+        communityGeojsonData = await res.json();
+        filterAndRenderMarkers();
+    } catch (error) {
+        console.error("Error loading community spots:", error);
     }
 }
 
@@ -152,12 +167,22 @@ function onEachFeature(feature, layer) {
 
 loadAllData();
 loadSpots(); 
+loadCommunitySpots();
 
 
 //filter function and load edits
 function filterAndRenderMarkers() {
     // Clear current markers from the map layer group
     markersLayer.clearLayers();
+
+    // approved suggestions: normal blue pin; suggested cafes follow the Cafes toggle
+    if (communityGeojsonData) {
+        const cafesOn = document.getElementById('cafeToggle')?.checked;
+        addGeoJSONToLayer(communityGeojsonData, function (feature) {
+            const type = ((feature.properties || {}).type || '').toLowerCase();
+            return type === 'cafe' ? cafesOn : true;
+        });
+    }
 
     // 1. Check if the Cafe toggle is checked
     const cafesToggle = document.getElementById('cafeToggle');
