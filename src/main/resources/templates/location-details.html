@@ -7,6 +7,7 @@
 
     <main>
         <div class="card">
+            <!-- Location Details -->
             <h1 th:text="${location.name}">Location Name</h1>
 
             <p th:if="${location.type != null}">
@@ -16,43 +17,56 @@
             <p th:if="${location.description != null}">
                 <strong>Description:</strong> <span th:text="${location.description}">A spot with great coffee.</span>
             </p>            
-        </div>
+        
 
-        <!-- Messages -->
-        <p class="success" th:if="${success}" th:text="${success}"></p>
-        <p class="error" th:if="${error}" th:text="${error}"></p>
+            <!-- Staus messages -->
+            <p class="success" th:if="${success}" th:text="${success}"></p>
+            <p class="error" th:if="${error}" th:text="${error}"></p>
 
-        <!-- Already reviewed: no form  -->
-        <p th:if="${alreadyReviewed and error == null}">You've already reviewed this spot.</p>
-
-        <form th:unless="${alreadyReviewed}" class="stack"
-        th:action="@{/locations/reviews}" method="post">
-
-            <input type="hidden" name="locationId" th:value="${location.id}">
-
-            <label for="text">Your review</label>
-            <textarea id="text" name="text" rows="5" required
-                th:maxlength="${maxLength}"
-                th:text="${text}">
-            </textarea>
-
-            <button class="btn" type="submit">Submit review</button>
-        </form>
-
-        <section class="reviews">
-            <h2>Reviews</h2>
-
-            <p th:if="${#lists.isEmpty(reviews)}">No reviews yet.</p>
-
-            <article class="review" th:each="review : ${reviews}">
-                <p class="review-meta">
-                <strong th:text="${review.author}">username</strong>
-                · <span th:text="${review.postedOn}">date</span>
+            <!-- Review Form or Already Reviewed State  -->
+            <section class="review-submission">
+                <p th:if="${alreadyReviewed and error == null}" class="info-message">
+                    You've already reviewed this spot.
                 </p>
-                <p class="review-text" th:text="${review.text}">review text</p>
-            </article>
-        </section>
-      
+
+                <form th:unless="${alreadyReviewed}" class="stack" th:action="@{/locations/reviews}" method="post">
+                    <input type="hidden" name="locationId" th:value="${location.id}">
+
+                    <label for="text">Your review</label>
+                    <textarea id="text" name="text" rows="5" required
+                        th:maxlength="${maxLength}"
+                        th:text="${text}">
+                    </textarea>
+
+                    <button class="btn" type="submit">Submit review</button>
+                </form>
+            </section>
+
+            <!-- Existing Reviews Section -->
+            <section class="reviews">
+                <h2>Reviews</h2>
+
+                <p th:if="${#lists.isEmpty(reviews)}">No reviews yet.</p>
+
+                <article class="review" th:each="review : ${reviews}">
+                    <p class="review-meta">
+                        <strong th:text="${review.author}">username</strong> · 
+                        <span th:text="${review.postedOn}">date</span>
+                    </p>
+                    <p class="review-text" th:text="${review.text}">review text</p>
+
+                    <!-- only on the logged in users own review -->
+                    <div class="inline-form" th:if="${review.mine}">
+                        <a th:href="@{/locations/reviews/{id}/edit(id=${review.id})}">Edit</a>
+
+                        <form th:action="@{/locations/reviews/{id}/delete(id=${review.id})}" method="post"
+                              onsubmit="return confirm('Delete your review? This cannot be undone.');">
+                            <button type="submit" class="btn btn-small btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </article>
+            </section>
+        </div>
     </main>
 
     <div th:replace="~{fragments :: footer}"></div>
