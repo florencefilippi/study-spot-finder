@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Suggest a Study Spot</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+  <style>
+    #suggestMap { height: 350px; margin-top: 8px; border-radius: 6px; }
+    .address-row { display: flex; gap: 8px; align-items: center; }
+    .address-row input { flex: 1; }
+    .address-row button.btn { margin-top: 4px; }
+    .hint { color: #666; font-size: 0.85rem; margin: 4px 0 0 0; }
+  </style>
+</head>
+<body>
+  <div th:replace="~{fragments :: navbar}"></div>
+
+  <main>
+    <div class="card">
+      <h1>Suggest a Study Spot</h1>
+      <p>Know a good place to study that isn't on the map? Tell us about it, and an admin will review it.</p>
+
+      <p class="success" th:if="${success}" th:text="${success}"></p>
+      <p class="hint" th:text="|You have ${pendingCount} of ${maxPending} suggestions waiting for review.|"></p>
+      <p><a th:href="@{/suggestions/mine}">View my suggestions</a></p>
+
+      <form class="stack" th:action="@{/suggestions}" th:object="${suggestionForm}" method="post">
+
+        <p class="error" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+
+        <label for="name">Name of the place:</label>
+        <input type="text" id="name" th:field="*{name}" placeholder="e.g. Bennett Library 4th Floor">
+        <p class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+
+        <label for="address">Address:</label>
+        <div class="address-row">
+          <input type="text" id="address" th:field="*{address}" placeholder="e.g. 8888 University Dr, Burnaby">
+          <button type="button" id="findAddress" class="btn btn-small">Find</button>
+        </div>
+        <p class="hint" id="geocodeStatus">Click Find to drop a pin, then drag it to the exact spot. You can also click the map.</p>
+        <p class="error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></p>
+
+        <div id="suggestMap"></div>
+        <input type="hidden" id="latitude" th:field="*{latitude}">
+        <input type="hidden" id="longitude" th:field="*{longitude}">
+        <p class="error" th:if="${#fields.hasErrors('latitude')}" th:errors="*{latitude}"></p>
+
+        <label for="type">Type:</label>
+        <select id="type" th:field="*{type}">
+          <option value="">Choose a type</option>
+          <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+        </select>
+        <p class="error" th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></p>
+
+        <label for="openingHours">Opening hours (optional):</label>
+        <input type="text" id="openingHours" th:field="*{openingHours}" placeholder="e.g. Mon-Fri 8am-10pm">
+        <p class="error" th:if="${#fields.hasErrors('openingHours')}" th:errors="*{openingHours}"></p>
+
+        <label for="description">Description (optional):</label>
+        <textarea id="description" rows="3" th:field="*{description}"
+                  placeholder="What's it like? Quiet? Outlets? Wi-Fi?"></textarea>
+        <p class="error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+
+        <label for="reviewText">Your review:</label>
+        <textarea id="reviewText" rows="4" th:field="*{reviewText}"
+                  placeholder="How was studying here?"></textarea>
+        <p class="error" th:if="${#fields.hasErrors('reviewText')}" th:errors="*{reviewText}"></p>
+
+        <button class="btn" type="submit">Submit suggestion</button>
+      </form>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments :: footer}"></div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script th:src="@{/js/suggest-spot.js}"></script>
+</body>
+</html>
