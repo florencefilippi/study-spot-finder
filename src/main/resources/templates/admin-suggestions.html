@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Review Suggestions')}"></head>
+<body>
+  <div th:replace="~{fragments :: navbar}"></div>
+
+  <main>
+    <div class="card">
+      <h1>Review Suggestions</h1>
+
+      <p class="success" th:if="${success}" th:text="${success}"></p>
+      <p class="error" th:if="${error}" th:text="${error}"></p>
+
+      <p th:if="${#lists.isEmpty(suggestions)}">No suggestions waiting for review.</p>
+      <p class="hint" th:unless="${#lists.isEmpty(suggestions)}"
+         th:text="|${#lists.size(suggestions)} waiting for review, oldest first.|"></p>
+
+      <article class="suggestion-item" th:each="s : ${suggestions}">
+        <h2 th:text="${s.name}">Name</h2>
+        <p class="hint"
+           th:text="|Suggested by ${s.suggestedBy} on ${dateFormat.format(s.createdAt)}|">Suggested by</p>
+
+        <p><strong>Address:</strong> <span th:text="${s.address}"></span>
+          (<a th:href="|https://www.google.com/maps/search/?api=1&query=${s.latitude},${s.longitude}|"
+              target="_blank" rel="noopener noreferrer">check pin location ↗</a>)
+        </p>
+        <p><strong>Type:</strong> <span th:text="${s.type}"></span></p>
+        <p th:if="${s.openingHours != null}"><strong>Hours:</strong> <span th:text="${s.openingHours}"></span></p>
+        <p th:if="${s.description != null}"><strong>Description:</strong> <span th:text="${s.description}"></span></p>
+        <p><strong>Their review:</strong> <span th:text="${s.reviewText}"></span></p>
+
+        <div class="admin-actions">
+          <form th:action="@{/admin/suggestions/{id}/approve(id=${s.id})}" method="post" class="inline-form">
+            <button type="submit" class="btn btn-small">Approve</button>
+          </form>
+
+          <form th:action="@{/admin/suggestions/{id}/reject(id=${s.id})}" method="post" class="inline-form">
+            <input type="text" name="reason" maxlength="500" placeholder="Reason (optional, shown to the user)">
+            <button type="submit" class="btn btn-small btn-danger">Reject</button>
+          </form>
+        </div>
+      </article>
+
+      <p><a th:href="@{/admin}">Back to admin dashboard</a></p>
+    </div>
+  </main>
+
+  <div th:replace="~{fragments :: footer}"></div>
+</body>
+</html>
