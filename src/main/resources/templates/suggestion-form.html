@@ -24,6 +24,7 @@
 
       <p class="success" th:if="${success}" th:text="${success}"></p>
       <p class="hint" th:text="|You have ${pendingCount} of ${maxPending} suggestions waiting for review.|"></p>
+      <p><a th:href="@{/suggestions/mine}">View my suggestions</a></p>
 
       <form class="stack" th:action="@{/suggestions}" th:object="${suggestionForm}" method="post">
 

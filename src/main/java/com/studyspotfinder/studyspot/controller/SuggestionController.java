@@ -2,6 +2,9 @@ package com.studyspotfinder.studyspot.controller;
 
 import java.security.Principal;
 import java.util.List;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +34,10 @@ public class SuggestionController {
     // a user can have at most this many suggestions waiting for review
     static final int MAX_PENDING = 3;
 
+    // dates shown in B.C. time, e.g. "Nov 27, 2026"
+    private static final DateTimeFormatter DATE_FORMAT =
+        DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.ENGLISH).withZone(ZoneId.of("America/Vancouver"));
+
     // rough box around Metro Vancouver
     private static final double MIN_LAT = 49.0, MAX_LAT = 49.45;
     private static final double MIN_LON = -123.3, MAX_LON = -122.4;
@@ -45,6 +52,16 @@ public class SuggestionController {
     public String newForm(Model model, Principal principal) {
         showForm(model, new SuggestionForm(), principal.getName());
         return "suggestion-form";
+    }
+
+    @GetMapping("/mine")
+    public String mySuggestions(Model model, Principal principal) {
+        String username = principal.getName();
+        model.addAttribute("suggestions", suggestions.findBySuggestedByOrderByCreatedAtDesc(username));
+        model.addAttribute("pendingCount", pendingCount(username));
+        model.addAttribute("maxPending", MAX_PENDING);
+        model.addAttribute("dateFormat", DATE_FORMAT);
+        return "my-suggestions";
     }
 
     @PostMapping
@@ -90,7 +107,7 @@ public class SuggestionController {
 
         redirect.addFlashAttribute("success",
                 "Thanks! \"" + suggestion.getName() + "\" was sent to an admin for review.");
-        return "redirect:/suggestions/new";
+        return "redirect:/suggestions/mine";
     }
 
     private long pendingCount(String username) {
