@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import org.springframework.ui.Model;
 import java.util.List;
+import java.util.ArrayList;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,6 +46,23 @@ public class SavedSpotController {
 
         return "saved";
     }
+    
+    // Get Mapping: used to get a list of the locations saved by the user
+    @GetMapping("/api/saved")
+    @ResponseBody
+    public List<String> getSavedSpotsId(Authentication authentication) {
+        User loggedinUser = currentUser(authentication);
+
+        List<SavedSpot> savedSpots = savedSpotRepository.findByUser(loggedinUser);
+
+        List<String> ids = new ArrayList<>();
+        for(SavedSpot s : savedSpots){
+            ids.add(s.getSpotId());
+        }
+
+        return ids;
+    }
+    
 
     @PostMapping("/saved")
     @ResponseBody

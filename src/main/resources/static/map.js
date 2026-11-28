@@ -4,7 +4,8 @@ const initialLng = -123.12074;
 const map = L.map('map').setView([initialLat, initialLng], 15);
 
 const cafeGeoJSONPath = 'data/vancouver-cafes.geojson'; 
-const sfuGeoJSONPath = 'data/sfu-studySpots.geojson'; 
+const sfuGeoJSONPath = 'data/sfu-studySpots.geojson';
+let savedIds = new Set();
 
 // Initialize a Layer Group for markers
 const markersLayer = L.layerGroup().addTo(map);
@@ -91,6 +92,22 @@ async function loadSpots() {
     }
 }
 
+// Loads all the saved locations with the map opens
+async function loadSavedIds() {
+    try {
+        const res = await fetch('/api/saved');
+        if(!res.ok){
+            throw new Error("Failed to load the locations saved");
+        }
+        savedIds = new Set(await res.json());
+        // Redraws the markers so the popups pick up the saved state
+        filterAndRenderMarkers();
+    }
+    catch(error){
+        console.error("Error loading saved locations:", error)
+    }
+}
+
 function addGeoJSONToLayer(geojsonData, filterFunction = null, icon = null) {
     L.geoJSON(geojsonData, {
         pointToLayer: function (feature, latlng) {
@@ -132,6 +149,9 @@ function onEachFeature(feature, layer) {
     // url that goes to a location's details page (only for features with an id)
     const detailsUrl = feature.id ? `/locations/details?id=${encodeURIComponent(feature.id)}` : '';
 
+    // Check whether the location is saved or not
+    const isSaved = feature.id && savedIds.has(feature.id);
+
     // description and owner only exist on contributor spots, so they only show for those.
     layer.bindPopup(`
         <div style="font-family: sans-serif;">
@@ -146,13 +166,15 @@ function onEachFeature(feature, layer) {
             ${detailsUrl ? 
                 `<a href="${detailsUrl}" style="color: #0078A8; display: block;">View Details &amp; Reviews</a>` : ''
             }
-            ${feature.id ? `<button class="save-spot-btn" data-spot-id="${escapeHtml(feature.id)}" data-spot-name="${escapeHtml(name)}">Save</button>` : ''}
+            ${feature.id ? (isSaved ? `<button class="save-spot-btn saved" disabled>Saved ✓</button>` : `<button class="save-spot-btn" data-spot-id="${escapeHtml(feature.id)}" data-spot-name="${escapeHtml(name)}">Save</button>`) : ''}
+            <span class="save-message"></span>
         </div>
     `);
 }
 
 loadAllData();
 loadSpots(); 
+loadSavedIds();
 
 
 //filter function and load edits
@@ -229,8 +251,15 @@ document.addEventListener('click', async function (event) {
     });
 
     if(response.ok){
+        const result = await response.text();
+        savedIds.add(btn.dataset.spotId);
+
         btn.textContent = "Saved ✓";
         btn.disabled = true;
+        btn.classList.add('saved');
+
+        const message = btn.parentElement.querySelector('.save-message');
+        message.textContent = (result === "already saved") ? "Already in your Saved List" : "Added to your Saved List";
     }
     else{
         btn.textContent = "Couldn't save the location";
