@@ -11,13 +11,20 @@
       <div class="card">
         <h1>Saved Study Spots</h1>
 
+        <p class="success" th:if="${param.removed}">Spot removed from your Saved List.</p>
+
         <p th:if="${savedSpots.isEmpty()}">No spots saved yet.</p>
 
-        <ul th:unless="${savedSpots.isEmpty()}">
-          <li th:each="spot : ${savedSpots}" th:text="${spot.spotName}">
-            Spot Name
-          </li>
-        </ul>
+        <div th:unless="${savedSpots.isEmpty()}">
+            <div class="saved-item" th:each="spot : ${savedSpots}">
+                <h3 th:text="${spot.spotName}">Spot name</h3>
+
+                <form th:action="@{/saved/remove}" method="post">
+                    <input type="hidden" name="id" th:value="${spot.id}">
+                    <button type="submit" class="btn">Remove</button>
+                </form>
+            </div>
+        </div>
       </div>
     </main>
 

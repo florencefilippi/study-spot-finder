@@ -8,13 +8,15 @@ import com.studyspotfinder.studyspot.model.SavedSpot;
 import org.springframework.stereotype.Controller;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
-
 import org.springframework.ui.Model;
-import java.util.List;
-import java.util.ArrayList;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Optional;
 
 
 @Controller 
@@ -77,5 +79,21 @@ public class SavedSpotController {
         return "already saved";
     }
     
+    @PostMapping("/saved/remove")
+    public String postremoveSavedSpot(Authentication authentication, @RequestParam Long id) {
+
+        User loggedinUser = currentUser(authentication);
+
+        Optional<SavedSpot> existing = savedSpotRepository.findById(id);
+
+        if(existing.isPresent()){
+            SavedSpot spot = existing.get();
+
+            if(spot.getUser().getId().equals(loggedinUser.getId())){
+                savedSpotRepository.delete(spot);
+            }
+        }
+        return "redirect:/saved?removed";
+    }
     
 }

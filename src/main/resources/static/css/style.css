@@ -210,3 +210,14 @@ button.btn-danger {
   border: 1px solid #a6192e;
 }
 button.btn-danger:hover { background: #a6192e; color: white; }
+
+/* Make the sections look seperate on the Saved page */
+.saved-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-top: 12px;
+}
+.saved-item h3{
+  margin: 0 0 8px 0;
+}
